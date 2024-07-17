@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     flakery.url = "github:getflakery/flakes";
+    
   };
 
   outputs = { self, nixpkgs, flakery }: {
@@ -11,6 +12,7 @@
       system = "x86_64-linux";
       modules = [
         flakery.nixosModules.flakery
+        flakery.nixosConfigurations.base
         ./configuration.nix
       ];
     };
