@@ -7,7 +7,7 @@
   services.windmill.database.urlPath = "/dburl";
   services.postgresql = {
     authentication = ''
-      local all all trust
+      host    windmill        windmill        127.0.0.1/32            trust
     '';
   };
 }
