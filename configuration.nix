@@ -3,9 +3,10 @@
 {
   networking.firewall.allowedTCPPorts = [ 8001 ];
 
-  environment.systemPackages = with pkgs; [
-    bash
-  ];
+
+  systemd.services.windmill-server = {
+    path = [ pkgs.nodejs pkgs.bash ];
+  };
 
   system.stateVersion = "23.05";
   services.windmill.enable = true;
