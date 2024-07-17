@@ -5,4 +5,9 @@
   services.windmill.enable = true;
   services.windmill.baseUrl = "https://windmill-507bd7.flakery.xyz/";
   services.windmill.database.urlPath = "/dburl";
+  services.postgresql = {
+    authentication = ''
+      local all all trust
+    '';
+  };
 }
