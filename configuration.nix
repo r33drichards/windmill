@@ -6,7 +6,7 @@
   services.windmill.baseUrl = "https://windmill-507bd7.flakery.xyz/";
   services.windmill.database.urlPath = "/dburl";
   services.postgresql = {
-    authentication = pkgs.lib.mkForce ''
+    authentication = pkgs.lib.mkBefore ''
       host    windmill        windmill        127.0.0.1/32            trust
     '';
   };
