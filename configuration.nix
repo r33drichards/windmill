@@ -2,11 +2,12 @@
 
 {
   networking.firewall.allowedTCPPorts = [ 8001 ];
-
+  services.envfs.enable = true; # for /bin/bash
 
   systemd.services.windmill-server = {
     path = [ pkgs.nodejs pkgs.bash ];
   };
+
 
   system.stateVersion = "23.05";
   services.windmill.enable = true;
