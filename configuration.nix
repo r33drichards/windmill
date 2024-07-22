@@ -10,7 +10,7 @@
       pkgs.nix
       pkgs.curl
       pkgs.jq
-    ];
+    ];    
   };
 
   system.stateVersion = "23.05";
