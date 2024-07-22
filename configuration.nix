@@ -24,7 +24,10 @@
   systemd.services.windmill-worker = {
     path = [ pkgs.nix pkgs.curl pkgs.jq ];
     serviceConfig = {
-      BindPaths = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+      BindPaths = [
+        "/var/run/docker.sock:/var/run/docker.sock"
+        "/tmp:/tmp"
+      ];
     };
   };
 
