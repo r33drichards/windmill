@@ -12,6 +12,7 @@
       dns_enabled = true;
     };
     dockerSocket.enable = true;
+    dockerCompat = true;
   };
   # This is needed for podman to be able to talk over dns
   networking.firewall.interfaces."podman0" = {
