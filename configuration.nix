@@ -15,7 +15,7 @@
 
   system.stateVersion = "23.05";
   services.windmill.enable = true;
-  services.windmill.baseUrl = "https://windmill-507bd7.flakery.xyz/";
+  services.windmill.baseUrl = "https://windmill-ng-6db26f.flakery.xyz/";
   services.windmill.database.urlPath = "/dburl";
   services.postgresql = {
     authentication = pkgs.lib.mkForce ''
