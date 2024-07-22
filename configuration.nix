@@ -13,6 +13,7 @@
       pkgs.jq
       pkgs.git
       pkgs.ripgrep
+      pkgs.cowsay
     ];
   };
 
