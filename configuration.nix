@@ -5,30 +5,12 @@
   services.envfs.enable = true; # for /bin/bash
   services.envfs.extraFallbackPathCommands = "ln -s $''{pkgs.bash}/bin/bash $out/bash";
 
-  # Here we setup podman and enable dns
-  virtualisation.podman = {
-    enable = true;
-    defaultNetwork.settings = {
-      dns_enabled = true;
-    };
-    dockerSocket.enable = true;
-    dockerCompat = true;
-  };
-  # This is needed for podman to be able to talk over dns
-  networking.firewall.interfaces."podman0" = {
-    allowedUDPPorts = [ 53 ];
-    allowedTCPPorts = [ 53 ];
-  };
-
-
   systemd.services.windmill-worker = {
-    path = [ pkgs.nix pkgs.curl pkgs.jq pkgs.podman];
-    serviceConfig = {
-      BindPaths = [
-        "/var/run/docker.sock:/var/run/docker.sock"
-        "/tmp:/tmp"
-      ];
-    };
+    path = [
+      pkgs.nix
+      pkgs.curl
+      pkgs.jq
+    ];
   };
 
   system.stateVersion = "23.05";
