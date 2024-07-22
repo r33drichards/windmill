@@ -1,8 +1,27 @@
 {
   "nodes": {
-    "flakery": {
+    "comin": {
       "inputs": {
         "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1721680356,
+        "narHash": "sha256-O1Se3VHbfOneRW0XxZ7L7O/xYaJB+K5NFkAFTNIUYwk=",
+        "owner": "r33drichards",
+        "repo": "comin",
+        "rev": "72a6e4b9fa29171fffa372ef30ef5ff06850d09f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "r33drichards",
+        "repo": "comin",
+        "rev": "72a6e4b9fa29171fffa372ef30ef5ff06850d09f",
+        "type": "github"
+      }
+    },
+    "flakery": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
         "lastModified": 1720581715,
@@ -20,6 +39,19 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1717281328,
+        "narHash": "sha256-evZPzpf59oNcDUXxh2GHcxHkTEG4fjae2ytWP85jXRo=",
+        "path": "/nix/store/f3rv70nrmkfya581f1j2z9a6yx0b83np-source",
+        "rev": "b3b2b28c1daa04fe2ae47c21bb76fd226eac4ca1",
+        "type": "path"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
         "lastModified": 1700204040,
         "narHash": "sha256-xSVcS5HBYnD3LTer7Y2K8ZQCDCXMa3QUD1MzRjHzuhI=",
         "path": "/nix/store/rj6pqzx66pliiwdfk2wjnnlk40rm3mpd-source",
@@ -31,7 +63,7 @@
         "type": "indirect"
       }
     },
-    "nixpkgs_2": {
+    "nixpkgs_3": {
       "locked": {
         "lastModified": 1721379653,
         "narHash": "sha256-8MUgifkJ7lkZs3u99UDZMB4kbOxvMEXQZ31FO3SopZ0=",
@@ -49,8 +81,9 @@
     },
     "root": {
       "inputs": {
+        "comin": "comin",
         "flakery": "flakery",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_3"
       }
     }
   },
