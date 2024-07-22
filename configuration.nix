@@ -33,6 +33,14 @@
     '';
   };
 
+
+  systemd.services.comin = {
+    environment = {
+      "TEMPLATE_ID" = (pkgs.lib.removeSuffix "\n" (builtins.readFile /metadata/template-id));
+      "USER_TOKEN" = (pkgs.lib.removeSuffix "\n" (builtins.readFile /metadata/user-token));
+    };
+  };
+
   services.comin = {
     enable = true;
     hostname = "flakery";
