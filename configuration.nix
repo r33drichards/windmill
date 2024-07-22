@@ -11,6 +11,7 @@
       pkgs.nix
       pkgs.curl
       pkgs.jq
+      pkgs.git
     ];
   };
 
