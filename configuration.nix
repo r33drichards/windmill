@@ -23,7 +23,7 @@
 
   systemd.services.windmill-worker = {
     path = [ pkgs.nix pkgs.curl pkgs.jq ];
-  }
+  };
 
   system.stateVersion = "23.05";
   services.windmill.enable = true;
