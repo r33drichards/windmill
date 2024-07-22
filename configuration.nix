@@ -19,10 +19,13 @@
     allowedUDPPorts = [ 53 ];
     allowedTCPPorts = [ 53 ];
   };
-  
+
 
   systemd.services.windmill-worker = {
     path = [ pkgs.nix pkgs.curl pkgs.jq ];
+    serviceConfig = {
+      BindPaths = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+    };
   };
 
   system.stateVersion = "23.05";
