@@ -12,7 +12,6 @@
       pkgs.curl
       pkgs.jq
       pkgs.git
-      pkgs.ripgrep
     ];
 
   };
