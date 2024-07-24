@@ -12,7 +12,36 @@
       pkgs.curl
       pkgs.jq
       pkgs.git
+      pkgs.docker
     ];
+
+    # bind mount /var/run/docker.sock
+    ServiceConfig = {
+      MountFlags = [ "shared" ];
+      Mounts = [
+        {
+          source = "/var/run/docker.sock";
+          target = "/var/run/docker.sock";
+          type = "bind";
+          bindOptions = [ "ro" ];
+        }
+      ];
+    };
+  };
+
+  # Here we setup podman and enable dns
+  virtualisation.podman = {
+    enable = true;
+    defaultNetwork.settings = {
+      dns_enabled = true;
+    };
+    dockerSocket.enable = true;
+    dockerCompat = true;
+  };
+  # This is needed for podman to be able to talk over dns
+  networking.firewall.interfaces."podman0" = {
+    allowedUDPPorts = [ 53 ];
+    allowedTCPPorts = [ 53 ];
   };
 
   system.stateVersion = "23.05";
