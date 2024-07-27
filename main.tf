@@ -65,6 +65,26 @@ resource "aws_s3_bucket" "windmill" {
   }
 }
 
+resource "aws_s3_bucket_versioning" "windmill" {
+  bucket = aws_s3_bucket.windmill.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "windmill" {
+  bucket = aws_s3_bucket.windmill.id
+
+  rule {
+    id     = "retain-90-days"
+    status = "Enabled"
+
+    expiration {
+      days = 90
+    }
+  }
+}
+
 resource "aws_s3_bucket_policy" "windmill" {
   bucket = aws_s3_bucket.windmill.id
 
