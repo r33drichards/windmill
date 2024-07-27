@@ -19,6 +19,8 @@
   services.envfs.extraFallbackPathCommands = "ln -s $''{pkgs.bash}/bin/bash $out/bash";
 
   systemd.services.windmill-worker = {
+    # wait for restore db to complete
+    after = [ "restore.service" ];
     path = [
       pkgs.nix
       pkgs.curl
@@ -29,8 +31,19 @@
       pkgs.gawk
       pkgs.awscli2
     ];
-
   };
+
+  systemd.services.windmill-worker-native = {
+    # wait for restore db to complete
+    after = [ "restore.service" ];
+  };
+
+  # windmill-worker.service   
+  systemd.services.windmill-native = {
+    after = [ "restore.service" ];
+  }
+
+
 
 
   system.stateVersion = "23.05";
