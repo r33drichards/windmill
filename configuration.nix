@@ -1,6 +1,18 @@
 { config, pkgs, ... }:
 
 {
+
+  environment.systemPackages = with pkgs; [
+    awscli2
+    curl
+    git
+    jq
+    ripgrep
+    openssh
+    gawk
+    nix
+    bash
+  ];
   networking.firewall.allowedTCPPorts = [ 3007 5000 9002 8001 ];
 
   services.envfs.enable = true; # for /bin/bash
@@ -15,6 +27,8 @@
       pkgs.ripgrep
       pkgs.openssh
       pkgs.gawk
+      pkgs.awscli2
+
     ];
 
   };
@@ -39,6 +53,47 @@
       host    replication     all             ::1/128                 trust
     '';
   };
+
+  # add postgres backup
+    # Define the sync service
+  systemd.services.sync-postgresql-backup = {
+    description = "Sync PostgreSQL backup to S3";
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.awscli2 ];
+    environment = {
+      AWS_ACCESS_KEY_ID = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-access-key-id));
+      AWS_SECRET_ACCESS_KEY = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-secret-access-key));
+      AWS_REGION = "us-west-2";
+    };
+    script = ''
+      aws s3 sync /var/backup/postgresql s3://windmill/postgresql-backup
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+    };
+  };
+
+  # Define the timer for the sync service
+  systemd.timers.sync-postgresql-backup-timer = {
+    description = "Timer to sync PostgreSQL backup to S3 every hour";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+    };
+    unitConfig = {
+      Unit = "sync-postgresql-backup.service";
+    };
+  };
+
+  services.postgresqlBackup = {
+    enable = true;
+    databases = [ "windmill" ];
+  };
+
+  # timer for postgresql backup service to run every minute
+
+
 
 
   systemd.services.comin = {
