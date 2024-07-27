@@ -55,35 +55,46 @@
 
   # add postgres backup
     # Define the sync service
-  # systemd.services.sync-postgresql-backup = {
-  #   description = "Sync PostgreSQL backup to S3";
-  #   wantedBy = [ "multi-user.target" ];
-  #   path = [ pkgs.awscli2 ];
-  #   environment = {
-  #     AWS_ACCESS_KEY_ID = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-access-key-id));
-  #     AWS_SECRET_ACCESS_KEY = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-secret-access-key));
-  #     AWS_REGION = "us-west-2";
-  #   };
-  #   script = ''
-  #     aws s3 sync /var/backup/postgresql s3://windmill/postgresql-backup
-  #   '';
-  #   serviceConfig = {
-  #     Type = "oneshot";
-  #   };
-  # };
+  systemd.services.sync-postgresql-backup = {
+    description = "Sync PostgreSQL backup to S3";
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.awscli2 pkgs.jq];
+    environment = {
+      AWS_ACCESS_KEY_ID = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-access-key-id));
+      AWS_SECRET_ACCESS_KEY = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-secret-access-key));
+      AWS_REGION = "us-west-2";
+    };
+    script = ''
+      # assume role arn:aws:iam::150301572911:role/windmill 
+      # Assume the role and capture the output in a variable
+      output=$(aws sts assume-role \
+          --role-arn arn:aws:iam::150301572911:role/windmill \
+          --role-session-name MySession)
+
+      # Extract the temporary credentials from the output
+      export AWS_ACCESS_KEY_ID=$(echo $output | jq -r '.Credentials.AccessKeyId')
+      export AWS_SECRET_ACCESS_KEY=$(echo $output | jq -r '.Credentials.SecretAccessKey')
+      export AWS_SESSION_TOKEN=$(echo $output | jq -r '.Credentials.SessionToken')
+
+      aws s3 sync /var/backup/postgresql s3://windmill-fb9bb14a273e85f2/postgresql-backup
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+    };
+  };
 
   # Define the timer for the sync service
-  # systemd.timers.sync-postgresql-backup-timer = {
-  #   description = "Timer to sync PostgreSQL backup to S3 every hour";
-  #   wantedBy = [ "timers.target" ];
-  #   timerConfig = {
-  #     OnCalendar = "hourly";
-  #     Persistent = true;
-  #   };
-  #   unitConfig = {
-  #     Unit = "sync-postgresql-backup.service";
-  #   };
-  # };
+  systemd.timers.sync-postgresql-backup-timer = {
+    description = "Timer to sync PostgreSQL backup to S3 every hour";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+    };
+    unitConfig = {
+      Unit = "sync-postgresql-backup.service";
+    };
+  };
 
   services.postgresqlBackup = {
     enable = true;
