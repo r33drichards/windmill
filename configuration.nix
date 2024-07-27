@@ -110,7 +110,23 @@
     wantedBy = [ "multi-user.target" ];
     requires = [ "postgresql.service" ];
     path = [ pkgs.awscli2 pkgs.postgresql pkgs.gzip ];
+    environment = {
+      AWS_ACCESS_KEY_ID = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-access-key-id));
+      AWS_SECRET_ACCESS_KEY = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-secret-access-key));
+      AWS_REGION = "us-west-2";
+    };
     script = ''
+      # assume role arn:aws:iam::150301572911:role/windmill 
+      # Assume the role and capture the output in a variable
+      output=$(aws sts assume-role \
+          --role-arn arn:aws:iam::150301572911:role/windmill \
+          --role-session-name MySession)
+
+      # Extract the temporary credentials from the output
+      export AWS_ACCESS_KEY_ID=$(echo $output | jq -r '.Credentials.AccessKeyId')
+      export AWS_SECRET_ACCESS_KEY=$(echo $output | jq -r '.Credentials.SecretAccessKey')
+      export AWS_SESSION_TOKEN=$(echo $output | jq -r '.Credentials.SessionToken')
+
       aws s3 cp s3://windmill-fb9bb14a273e85f2/postgresql-backup/windmill.sql.gz /var/backup/postgresql/windmill.sql.gz
       gunzip -f /var/backup/postgresql/windmill.sql.gz
       # exec on db ALTER DATABASE mbcontrol OWNER TO youruser;
