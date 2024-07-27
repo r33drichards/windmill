@@ -41,7 +41,7 @@
   # windmill-worker.service   
   systemd.services.windmill-native = {
     after = [ "restore.service" ];
-  }
+  };
 
 
 
