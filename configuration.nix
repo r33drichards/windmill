@@ -146,7 +146,7 @@
       psql -U postgres -c "DROP DATABASE IF EXISTS windmill"
       psql -U postgres -c "CREATE DATABASE windmill"
       psql -U postgres -c "ALTER DATABASE windmill OWNER TO windmill"
-      psql -U windmill -d winmill -f /var/backup/postgresql/windmill.sql
+      psql -U windmill -d windmill -f /var/backup/postgresql/windmill.sql
     '';
     serviceConfig = {
       Type = "oneshot";
