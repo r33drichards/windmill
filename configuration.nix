@@ -109,7 +109,7 @@
     description = "Restore database from S3";
     wantedBy = [ "multi-user.target" ];
     requires = [ "postgresql.service" ];
-    path = [ pkgs.awscli2 pkgs.postgresql pkgs.gzip ];
+    path = [ pkgs.awscli2 pkgs.postgresql pkgs.gzip pkgs.jq ];
     environment = {
       AWS_ACCESS_KEY_ID = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-access-key-id));
       AWS_SECRET_ACCESS_KEY = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-secret-access-key));
