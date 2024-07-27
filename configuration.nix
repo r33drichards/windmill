@@ -14,6 +14,7 @@
       pkgs.git
       pkgs.ripgrep
       pkgs.openssh
+      pkgs.gawk
     ];
 
   };
