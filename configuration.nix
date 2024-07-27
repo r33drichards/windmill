@@ -28,7 +28,7 @@
       pkgs.openssh
       pkgs.gawk
       pkgs.awscli2
-
+      pkgs.php
     ];
 
   };
