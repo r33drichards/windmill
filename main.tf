@@ -5,20 +5,16 @@ terraform {
       version = "~> 5.0"
     }
     random = {
-        source  = "hashicorp/random"
-        version = "~> 3.0"
+      source  = "hashicorp/random"
+      version = "~> 3.0"
     }
   }
 }
-
-# Create a VPC with 2 public and 2 private subnets
 
 provider "aws" {
   region = "us-west-2"
 }
 
-
-# create iam role
 resource "aws_iam_role" "windmill" {
   name = "windmill"
   assume_role_policy = jsonencode({
@@ -27,14 +23,13 @@ resource "aws_iam_role" "windmill" {
       {
         Effect = "Allow",
         Principal = {
-          Service = "ec2.amazonaws.com"
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/windmill"
         },
         Action = "sts:AssumeRole"
       }
     ]
   })
 }
-
 
 resource "aws_iam_policy" "windmill" {
   name        = "windmill"
@@ -53,12 +48,10 @@ resource "aws_iam_policy" "windmill" {
   })
 }
 
-
 resource "aws_iam_role_policy_attachment" "windmill" {
   role       = aws_iam_role.windmill.name
   policy_arn = aws_iam_policy.windmill.arn
 }
-
 
 resource "random_id" "windmill" {
   byte_length = 8
@@ -71,7 +64,6 @@ resource "aws_s3_bucket" "windmill" {
     Name = "windmill"
   }
 }
-
 
 resource "aws_s3_bucket_policy" "windmill" {
   bucket = aws_s3_bucket.windmill.id
@@ -96,7 +88,6 @@ resource "aws_s3_bucket_policy" "windmill" {
   })
 }
 
-# iam user that can assume the role
 resource "aws_iam_user" "windmill" {
   name = "windmill"
 }
@@ -126,16 +117,16 @@ output "access_key" {
 }
 
 output "secret_key" {
-  value = aws_iam_access_key.windmill.secret
+  value     = aws_iam_access_key.windmill.secret
   sensitive = true
 }
 
-# output the role arn
 output "role_arn" {
   value = aws_iam_role.windmill.arn
 }
 
-# output the bucket s3:// url
 output "bucket_url" {
   value = aws_s3_bucket.windmill.bucket
 }
+
+data "aws_caller_identity" "current" {}

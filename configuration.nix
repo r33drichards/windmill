@@ -104,6 +104,26 @@
   # timer for postgresql backup service to run every minute
 
 
+    # Restore mbcontrol from S3
+  systemd.services.restore = {
+    description = "Restore database from S3";
+    wantedBy = [ "multi-user.target" ];
+    requires = [ "postgresql.service" ];
+    path = [ pkgs.awscli2 pkgs.postgresql pkgs.gzip ];
+    script = ''
+      aws s3 cp s3://windmill-fb9bb14a273e85f2/postgresql-backup/windmill.sql.gz /var/backup/postgresql/windmill.sql.gz
+      gunzip -f /var/backup/postgresql/windmill.sql.gz
+      # exec on db ALTER DATABASE mbcontrol OWNER TO youruser;
+      psql -U postgres -c "DROP DATABASE IF EXISTS windmill"
+      psql -U postgres -c "CREATE DATABASE windmill"
+      psql -U postgres -c "ALTER DATABASE windmill OWNER TO windmill"
+      psql -U windmill -d winmill -f /var/backup/postgresql/windmill.sql
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+
+    };
+  };
 
 
   systemd.services.comin = {
