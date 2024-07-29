@@ -21,6 +21,7 @@
   systemd.services.windmill-worker = {
     # wait for restore db to complete
     after = [ "restore.service" ];
+    requires = [ "restore.service" ];
     path = [
       pkgs.nix
       pkgs.curl
@@ -36,11 +37,15 @@
   systemd.services.windmill-worker-native = {
     # wait for restore db to complete
     after = [ "restore.service" ];
+    requires = [ "restore.service" ];
+
   };
 
   # windmill-worker.service   
   systemd.services.windmill-native = {
     after = [ "restore.service" ];
+    requires = [ "restore.service" ];
+
   };
 
 
@@ -67,11 +72,11 @@
   };
 
   # add postgres backup
-    # Define the sync service
+  # Define the sync service
   systemd.services.sync-postgresql-backup = {
     description = "Sync PostgreSQL backup to S3";
     wantedBy = [ "multi-user.target" ];
-    path = [ pkgs.awscli2 pkgs.jq];
+    path = [ pkgs.awscli2 pkgs.jq ];
     environment = {
       AWS_ACCESS_KEY_ID = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-access-key-id));
       AWS_SECRET_ACCESS_KEY = (pkgs.lib.removeSuffix "\n" (builtins.readFile /aws-secret-access-key));
@@ -117,7 +122,7 @@
   # timer for postgresql backup service to run every minute
 
 
-    # Restore mbcontrol from S3
+  # Restore mbcontrol from S3
   systemd.services.restore = {
     description = "Restore database from S3";
     wantedBy = [ "multi-user.target" ];
