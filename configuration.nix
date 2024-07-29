@@ -148,7 +148,6 @@
       psql -U postgres -c "CREATE DATABASE windmill"
       psql -U postgres -c "ALTER DATABASE windmill OWNER TO windmill"
       psql -U windmill -d windmill -f /var/backup/postgresql/windmill.sql
-      systemctl start windmill-worker windmill-worker-native windmill-server.service
     '';
     serviceConfig = {
       Type = "oneshot";
