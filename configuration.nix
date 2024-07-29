@@ -147,7 +147,6 @@
 
       aws s3 cp s3://windmill-fb9bb14a273e85f2/postgresql-backup/windmill.sql.gz /var/backup/postgresql/windmill.sql.gz
       gunzip -f /var/backup/postgresql/windmill.sql.gz
-      # exec on db ALTER DATABASE mbcontrol OWNER TO youruser;
       psql -U postgres -c "DROP DATABASE IF EXISTS windmill"
       psql -U postgres -c "CREATE DATABASE windmill"
       psql -U postgres -c "ALTER DATABASE windmill OWNER TO windmill"
