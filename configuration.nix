@@ -154,7 +154,10 @@
     '';
     serviceConfig = {
       Type = "oneshot";
-
+      Restart = "on-failure";
+      RestartSec = 30;  # Delay between retries
+      StartLimitBurst = 5;  # Number of retry attempts
+      StartLimitIntervalSec = 300;  # Time window for retry attempts
     };
   };
 
