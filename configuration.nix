@@ -155,9 +155,9 @@
     serviceConfig = {
       Type = "oneshot";
       Restart = "on-failure";
-      RestartSec = 30;  # Delay between retries
-      StartLimitBurst = 5;  # Number of retry attempts
-      StartLimitIntervalSec = 300;  # Time window for retry attempts
+      RestartSec = 30; # Delay between retries
+      StartLimitBurst = 5; # Number of retry attempts
+      StartLimitIntervalSec = 300; # Time window for retry attempts
     };
   };
 
@@ -209,18 +209,18 @@
     };
   };
 
-  services.prometheus = {
-    enable = true;
-    port = 9090;
-    exporters = {
-      node = {
-        enable = true;
-        enabledCollectors = [ "systemd" ];
-        port = 9002;
-      };
+  # services.prometheus = {
+  #   enable = true;
+  #   port = 9090;
+  #   exporters = {
+  #     node = {
+  #       enable = true;
+  #       enabledCollectors = [ "systemd" ];
+  #       port = 9002;
+  #     };
 
-    };
-  };
+  #   };
+  # };
   services.comin = {
     enable = true;
     hostname = "flakery";
@@ -232,4 +232,6 @@
       }
     ];
   };
+
+
 }

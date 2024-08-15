@@ -34,16 +34,17 @@ resource "aws_iam_role" "windmill" {
 resource "aws_iam_policy" "windmill" {
   name        = "windmill"
   description = "Allow access to secrets"
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
-     {
+      {
         Effect = "Allow",
         Action = [
           "s3:*"
         ],
         Resource = "${aws_s3_bucket.windmill.arn}/*"
-      }
+      },
+
     ]
   })
 }
@@ -100,8 +101,8 @@ resource "aws_s3_bucket_policy" "windmill" {
           "s3:*",
         ],
         Resource = [
-            "${aws_s3_bucket.windmill.arn}/*",
-            "${aws_s3_bucket.windmill.arn}"
+          "${aws_s3_bucket.windmill.arn}/*",
+          "${aws_s3_bucket.windmill.arn}"
         ]
       }
     ]
@@ -120,8 +121,8 @@ resource "aws_iam_user_policy" "windmill" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
-        Action = "sts:AssumeRole",
+        Effect   = "Allow",
+        Action   = "sts:AssumeRole",
         Resource = aws_iam_role.windmill.arn
       }
     ]
